@@ -1,0 +1,15 @@
+.vagrant
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+
+.bundle/
+.kitchen/
+.ruby-gemset
+berks-cookbooks/
+bin/
+build/
+**/spec/examples.txt
