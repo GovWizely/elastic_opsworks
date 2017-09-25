@@ -5,7 +5,7 @@ class ElasticsearchCookbook::ConfigureProvider < Chef::Provider::LWRPBase
   provides :elasticsearch_configure
 
   def whyrun_supported?
-    false
+    true # we only use core Chef resources that also support whyrun
   end
 
   def action_manage
@@ -148,6 +148,9 @@ class ElasticsearchCookbook::ConfigureProvider < Chef::Provider::LWRPBase
       Chef::Log.warn("Please change the following to strings in order to work with this Elasticsearch cookbook: #{found_symbols.join(',')}")
     end
 
+    # workaround for https://github.com/elastic/cookbook-elasticsearch/issues/590
+    config_vars = ElasticsearchCookbook::HashAndMashBlender.new(merged_configuration).to_hash
+
     yml_template = template "elasticsearch.yml-#{default_config_name}" do
       path "#{new_resource.path_conf}/elasticsearch.yml"
       source new_resource.template_elasticsearch_yml
@@ -156,7 +159,7 @@ class ElasticsearchCookbook::ConfigureProvider < Chef::Provider::LWRPBase
       group es_user.groupname
       mode '0640'
       helpers(ElasticsearchCookbook::Helpers)
-      variables(config: merged_configuration)
+      variables(config: config_vars)
       action :nothing
     end
     yml_template.run_action(:create)

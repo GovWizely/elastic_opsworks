@@ -82,6 +82,11 @@ module ElasticsearchCookbook
 
     def determine_download_checksum(new_resource, node)
       platform_family = node['platform_family']
+
+      # for the sake of finding correct attribute data, use rhel for amazon too
+      # See https://github.com/elastic/cookbook-elasticsearch/issues/609
+      platform_family = 'rhel' if platform_family == 'amazon'
+
       install_type = new_resource.type
       version = new_resource.version
 
@@ -121,6 +126,26 @@ module ElasticsearchCookbook
       output
     rescue
       ''
+    end
+  end
+
+  class HashAndMashBlender
+    attr_accessor :target
+    def initialize(hash_or_mash_or_whatever)
+      self.target = hash_or_mash_or_whatever
+    end
+
+    def to_hash
+      target.each_with_object({}) do |(k, v), hsh|
+        hsh[k] =
+          if v.respond_to?(:to_hash)
+            self.class.new(v).to_hash
+          elsif v.respond_to?(:to_a)
+            v.to_a
+          else
+            v
+          end
+      end
     end
   end
 end
