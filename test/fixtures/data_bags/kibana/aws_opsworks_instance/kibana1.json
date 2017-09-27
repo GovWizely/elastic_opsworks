@@ -7,11 +7,11 @@
   "ebs_optimized": false,
   "ec2_instance_id": "i-08581ff4f4a309f8d",
   "elastic_ip": null,
-  "hostname": "elasticsearch1",
+  "hostname": "kibana1",
   "instance_id": "c0bead3d-9840-4e7f-b0d1-e8a91d0d4b89",
   "instance_type": "t2.micro",
   "layer_ids": [
-    "07175429-bb30-4b3c-be14-84dc4a13e88c"
+    "kibana-bb30-4b3c-be14-84dc4a13e88c"
   ],
   "os": "Ubuntu 16.04 LTS",
   "private_dns": "ip-172-31-38-211.ec2.internal",
@@ -31,7 +31,7 @@
   "ssh_host_dsa_key_private": "-----BEGIN DSA PRIVATE KEY-----\n\n-----END DSA PRIVATE KEY-----\n",
   "ssh_host_rsa_key_private": "-----BEGIN RSA PRIVATE KEY-----\n\n-----END RSA PRIVATE KEY-----\n",
   "role": [
-    "elasticsearch"
+    "kibana"
   ],
   "self": true
 }

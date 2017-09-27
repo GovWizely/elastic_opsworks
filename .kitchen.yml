@@ -11,6 +11,7 @@ provisioner:
   # For example:
   #   always_update_cookbooks: <%= !ENV['CI'] %>
   always_update_cookbooks: false
+  log_level: info
 
 verifier:
   name: inspec
@@ -27,9 +28,10 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      elasticsearch:
-        allocated_memory: 256m
-        cluster.name: test-cluster
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
 
   - name: data
     run_list:
@@ -39,9 +41,10 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      elasticsearch:
-        allocated_memory: 256m
-        cluster.name: test-cluster
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
 
   - name: elasticsearch
     run_list:
@@ -51,6 +54,35 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      elasticsearch:
-        allocated_memory: 256m
-        cluster.name: test-cluster
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
+
+  - name: kibana
+    run_list:
+      - recipe[elastic_opsworks::kibana_setup]
+    data_bags_path: test/fixtures/data_bags/kibana
+    verifier:
+      inspec_tests:
+        - test/integration/shared
+    attributes:
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
+
+  - name: barebone
+    run_list:
+      - recipe[elastic_opsworks::elasticsearch_setup]
+    data_bags_path: test/fixtures/data_bags/elasticsearch
+    verifier:
+      inspec_tests:
+        - test/integration/shared
+    attributes:
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
+        xpack:
+          enabled: false
