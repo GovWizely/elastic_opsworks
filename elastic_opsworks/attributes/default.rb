@@ -9,7 +9,7 @@ default['elastic_opsworks']['elasticsearch']['zen.minimum_master_nodes'] = 2
 
 default['elastic_opsworks']['kibana']['custom_configuration'] = {}
 default['elastic_opsworks']['kibana']['indices'] = %w(.kibana)
-default['elastic_opsworks']['kibana']['version'] = '5.5.3'
+default['elastic_opsworks']['kibana']['version'] = '5.6.8'
 
 default['elastic_opsworks']['xpack']['enabled'] = true
 default['elastic_opsworks']['xpack']['indices'] = %w(.security .monitoring* .watches .triggered_watches .watcher-history*)
