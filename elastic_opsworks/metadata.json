@@ -8,6 +8,7 @@
   "platforms": {
   },
   "dependencies": {
+    "datadog": ">= 0.0.0",
     "elasticsearch": "< 4.0.0",
     "java": ">= 0.0.0"
   },
