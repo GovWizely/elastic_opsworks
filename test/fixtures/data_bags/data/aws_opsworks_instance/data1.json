@@ -15,7 +15,7 @@
   ],
   "os": "Ubuntu 16.04 LTS",
   "private_dns": "ip-172-31-38-211.ec2.internal",
-  "private_ip": "10.31.38.211",
+  "private_ip": "172.31.38.211",
   "public_dns": "ec2-54-197-123-117.compute-1.amazonaws.com",
   "public_ip": "54.197.123.117",
   "root_device_type": "ebs",

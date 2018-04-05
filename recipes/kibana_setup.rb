@@ -50,7 +50,7 @@ template '/etc/logrotate.d/kibana' do
   group 'root'
   mode '0644'
   variables(
-    log_path: '/var/log/kibana/kibana.*',
+    log_path: '/var/log/kibana/kibana.stdout /var/log/kibana/kibana.stderr',
     pid: kibana_pid_file,
     username: 'kibana'
   )
