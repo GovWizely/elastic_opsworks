@@ -14,5 +14,5 @@ describe yaml('/etc/kibana/kibana.yml') do
 end
 
 describe file('/etc/logrotate.d/kibana') do
-  its('content') { should contain('/var/log/kibana/kibana.* {') }
+  its('content') { should contain('/var/log/kibana/kibana.stdout /var/log/kibana/kibana.stderr') }
 end

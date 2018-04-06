@@ -1,5 +1,25 @@
 # Change Log
 
+## [v3.4.5](https://github.com/elastic/cookbook-elasticsearch/tree/v3.4.5) (2018-03-25)
+- Add documentation for Java "trust anchors" problem (#646)
+- Add hashes for 5.6.8 (#649)
+
+## [v3.4.4](https://github.com/elastic/cookbook-elasticsearch/tree/v3.4.4) (2018-02-01)
+- Add hashes for ES 5.6.6 (#638) and ES 5.6.7 (#640)
+
+## [v3.4.3](https://github.com/elastic/cookbook-elasticsearch/tree/v3.4.3) (2018-01-03)
+- Add hashes for ES 5.6.5 (#632)
+
+## [v3.4.2](https://github.com/elastic/cookbook-elasticsearch/tree/v3.4.2) (2017-12-03)
+- Add hashes for ES 5.6.4 (#622)
+
+## [v3.4.1](https://github.com/elastic/cookbook-elasticsearch/tree/v3.4.1) (2017-10-18)
+- Add hashes for ES 5.6.3 (#616)
+
+## [v3.4.0](https://github.com/elastic/cookbook-elasticsearch/tree/v3.4.0) (2017-09-28)
+- Add hashes for ES 5.6.1 and 5.6.2 (#613)
+- Add the latest init scripts from .deb, .rpm, and systemd
+
 ## [v3.3.1](https://github.com/elastic/cookbook-elasticsearch/tree/v3.3.1) (2017-09-15)
 - Add hashes for ES 5.6.0 and 5.5.3 (#610)
 - Workaround for support 'amazon' platform_family (#609)

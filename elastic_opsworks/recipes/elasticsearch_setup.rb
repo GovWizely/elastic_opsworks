@@ -4,6 +4,7 @@
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
+include_recipe 'elastic_opsworks::default'
 include_recipe 'java::default'
 
 auto_create_indices = []
@@ -89,3 +90,12 @@ end
 elasticsearch_service 'elasticsearch' do
   action [:configure, :enable, :start]
 end
+
+node.default['datadog']['elasticsearch']['instances'] = [
+    {
+        url: "http://#{instance['private_ip']}:9200",
+        tags: %w(layer:elasticsearch)
+    }
+]
+
+include_recipe 'datadog::elasticsearch'
