@@ -9,6 +9,36 @@
 - AWS security group for inter cluster communication on port `9200` and `9300`
 - AWS security group for client access to the `data` nodes on port `9200`
 - AWS security group for kibana nodes on port `5601`
+- Datadog API and application keys
+
+# Stack settings
+
+- Default operating system: Amazon Linux 2017.09
+
+- Custom JSON:
+
+  - Datadog API and application keys
+
+  ```json
+  {
+    "datadog": {
+      "api_key": "CHANGE_ME_DATADOG_API_KEY",
+      "application_key": "CHANGE_ME_DATADOG_APPLICATION_KEY"
+    }
+  }
+  ```
+
+  - The default datadog env tag is `production`. To override this value, append the following JSON:
+
+    ```json
+    {
+      "datadog": {
+        "tags": {
+          "env": "staging"
+        }
+      }
+    }
+    ```
 
 # elasticsearch App
 
