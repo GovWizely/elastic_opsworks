@@ -13,6 +13,8 @@
 
 # Stack settings
 
+- Default operating system: Amazon Linux 2017.09
+
 - Custom JSON:
 
   - Datadog API and application keys
