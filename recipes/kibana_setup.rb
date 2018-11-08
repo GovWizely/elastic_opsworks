@@ -4,7 +4,7 @@
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
-node.default['elastic_opsworks']['elasticsearch']['plugins'] = node['elastic_opsworks']['elasticsearch']['plugins'] +  %w(x-pack)
+node.default['elastic_opsworks']['elasticsearch']['plugins'] = node['elastic_opsworks']['elasticsearch']['plugins']
 include_recipe 'elastic_opsworks::elasticsearch_setup'
 
 elastic_install 'kibana' do
@@ -35,9 +35,8 @@ merged_configuration = initial_configuration.merge node['elastic_opsworks']['kib
 template '/etc/kibana/kibana.yml' do
   source 'kibana.yml.erb'
   variables(config: merged_configuration)
+  not_if "grep '^elasticsearch.username' /etc/kibana/kibana.yml"
 end
-
-kibana_plugin 'x-pack'
 
 service 'kibana' do
   supports restart: true, status: true

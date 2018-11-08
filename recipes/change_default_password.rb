@@ -4,8 +4,6 @@
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
-include_recipe 'datadog::dd-handler'
-
 application_hash = search(:aws_opsworks_app, 'shortname:elasticsearch').first.to_hash
 
 elastic_user 'elastic' do

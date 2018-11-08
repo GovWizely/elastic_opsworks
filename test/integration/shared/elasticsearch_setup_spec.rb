@@ -13,8 +13,3 @@ describe yaml('/etc/elasticsearch/elasticsearch.yml') do
 
   its(%w(network.host)) { should eq('_ec2:privateDns_') }
 end
-
-describe yaml('/etc/dd-agent/conf.d/elastic.yaml') do
-  its(['instances', 0, 'url']) { should eq 'http://172.31.38.211:9200' }
-  its(['instances', 0, 'tags', 0]) { should eq 'layer:elasticsearch' }
-end
