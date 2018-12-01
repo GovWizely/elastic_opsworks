@@ -28,11 +28,6 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      datadog:
-        api_key: DATADOG_API_KEY
-        application_key: DATADOG_APPLICATION_KEY
-        tags:
-          env: test
       elastic_opsworks:
         elasticsearch:
           allocated_memory: 256m
@@ -46,11 +41,6 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      datadog:
-        api_key: DATADOG_API_KEY
-        application_key: DATADOG_APPLICATION_KEY
-        tags:
-          env: test
       elastic_opsworks:
         elasticsearch:
           allocated_memory: 256m
@@ -64,11 +54,6 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      datadog:
-        api_key: DATADOG_API_KEY
-        application_key: DATADOG_APPLICATION_KEY
-        tags:
-          env: test
       elastic_opsworks:
         elasticsearch:
           allocated_memory: 256m
@@ -82,11 +67,6 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      datadog:
-        api_key: DATADOG_API_KEY
-        application_key: DATADOG_APPLICATION_KEY
-        tags:
-          env: test
       elastic_opsworks:
         elasticsearch:
           allocated_memory: 256m
@@ -100,11 +80,6 @@ suites:
       inspec_tests:
         - test/integration/shared
     attributes:
-      datadog:
-        api_key: DATADOG_API_KEY
-        application_key: DATADOG_APPLICATION_KEY
-        tags:
-          env: test
       elastic_opsworks:
         elasticsearch:
           allocated_memory: 256m
