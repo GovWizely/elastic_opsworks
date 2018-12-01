@@ -9,4 +9,3 @@ chef_version '>= 12.18.31' if respond_to?(:chef_version)
 
 depends 'elasticsearch', '> 4.0'
 depends 'java'
-depends 'sysctl', '>= 0.10.0'

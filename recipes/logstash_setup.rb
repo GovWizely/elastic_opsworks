@@ -25,11 +25,9 @@ end
 
 yum_package 'logstash'
 
-# execute 'start logstash' do
-#   command 'sudo initctl start logstash'
-# end
-
 service 'logstash' do
+  provider Chef::Provider::Service::Upstart
   supports restart: true, status: true
   action [:enable, :start]
 end
+
