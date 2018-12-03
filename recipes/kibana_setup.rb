@@ -6,7 +6,7 @@
 
 node.default['elastic_opsworks']['elasticsearch']['plugins'] = node['elastic_opsworks']['elasticsearch']['plugins']
 include_recipe 'elastic_opsworks::elasticsearch_setup'
-include_recipe 'elastic_opsworks::logstash'
+include_recipe 'elastic_opsworks::logstash_setup'
 
 elastic_install 'kibana' do
   version node['elastic_opsworks']['kibana']['version']
