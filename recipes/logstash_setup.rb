@@ -31,3 +31,11 @@ service 'logstash' do
   action [:enable, :start]
 end
 
+application_hash = search(:aws_opsworks_app, 'shortname:elasticsearch').first.to_hash
+
+file '/etc/logstash/aws_credentials.yml' do
+  not_if { ::File.exist?('/etc/logstash/aws_credentials.yml') }
+  content ":access_key_id:  #{application_hash['environment']['aws_access_key']}
+:secret_access_key:  #{application_hash['environment']['aws_secret_key']}
+"
+end

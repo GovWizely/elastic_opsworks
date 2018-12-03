@@ -27,6 +27,6 @@ GRAPH
   mingw (2.1.0)
     seven_zip (>= 0.0.0)
   seven_zip (2.0.2)
-    windows (>= 0.0.0)
+    windows (>= 1.2.2)
   windows (5.1.5)
   yum (5.1.0)
