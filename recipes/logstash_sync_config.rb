@@ -21,6 +21,10 @@ aws_secret_access_key = #{application_hash['environment']['aws_secret_key']}
 "
 end
 
-aws_s3_file '/home/ec2-user/logstash_config/handle-logs.conf' do
-  bucket 'handle-logs-config'
+execute 'sync_config' do
+  command 'aws s3 sync s3://handle-logs-config logstash_config'
+  environment ({
+    'AWS_ACCESS_KEY_ID' => "#{application_hash['environment']['aws_access_key']}",
+    'AWS_SECRET_ACCESS_KEY' => "#{application_hash['environment']['aws_secret_key']}"
+  })
 end
