@@ -21,7 +21,7 @@ GRAPH
     chef-sugar (>= 0.0.0)
     yum (>= 0.0.0)
   homebrew (5.0.8)
-  java (3.1.0)
+  java (3.2.0)
     homebrew (>= 0.0.0)
     windows (>= 0.0.0)
   mingw (2.1.0)
