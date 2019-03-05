@@ -39,3 +39,14 @@ file '/etc/logstash/aws_credentials.yml' do
 :secret_access_key:  #{application_hash['environment']['aws_secret_key']}
 "
 end
+
+template '/etc/logrotate.d/logstash' do
+  source 'logstash_logrotate.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  variables(
+    log_path: '/var/log/logstash.stdout /var/log/logstash.stderr',
+    username: 'logstash'
+  )
+end
