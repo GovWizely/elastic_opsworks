@@ -50,3 +50,10 @@ template '/etc/logrotate.d/logstash' do
     username: 'logstash'
   )
 end
+
+directory '/etc/logstash/templates/' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end

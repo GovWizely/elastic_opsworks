@@ -1,15 +1,15 @@
 #
 # Cookbook:: elastic_opsworks
-# Recipe:: logstash_clear_config
+# Recipe:: logstash_clear_template
 #
 # Copyright:: 2018, The Authors, All Rights Reserved.
 
-directory '/etc/logstash/conf.d/' do
+directory '/etc/logstash/templates/' do
   recursive true
   action :delete
 end
 
-directory '/etc/logstash/conf.d/' do
+directory '/etc/logstash/templates/' do
   owner 'root'
   group 'root'
   mode '0755'
