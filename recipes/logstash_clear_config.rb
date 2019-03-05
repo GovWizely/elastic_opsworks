@@ -6,7 +6,7 @@
 
 directory '/etc/logstash/conf.d/' do
   recursive true
-  action :create
+  action :delete
 end
 
 directory '/etc/logstash/conf.d/' do
