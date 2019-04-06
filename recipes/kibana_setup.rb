@@ -9,7 +9,7 @@ include_recipe 'elastic_opsworks::elasticsearch_setup'
 include_recipe 'elastic_opsworks::logstash_setup'
 
 elastic_install 'kibana' do
-  version node['elastic_opsworks']['kibana']['version']
+  version node['elastic_opsworks']['elasticsearch']['version']
 end
 
 application_hash = search(:aws_opsworks_app, 'shortname:elasticsearch').first.to_hash
@@ -25,8 +25,6 @@ kibana_pid_file = '/var/run/kibana/kibana.pid'
 
 initial_configuration = {
   'elasticsearch.url' => "http://#{instance['private_ip']}:9200",
-  'elasticsearch.username' => application_hash['environment']['kibana_username'],
-  'elasticsearch.password' => application_hash['environment']['kibana_password'],
   'pid.file' => kibana_pid_file,
   'server.host' => instance['private_ip']
 }
