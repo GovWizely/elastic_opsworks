@@ -1,0 +1,13 @@
+<%= @log_path %> {
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    sharedscripts
+    postrotate
+        [ -s <%= @pid %> ] && kill -HUP `cat <%= @pid %>`
+    endscript
+    su <%= @username %>
+}
