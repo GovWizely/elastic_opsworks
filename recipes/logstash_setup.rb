@@ -5,6 +5,8 @@
 # Copyright:: 2018, The Authors, All Rights Reserved.
 #
 
+include_recipe 'elastic_opsworks::elasticsearch_setup'
+
 elastic_install 'logstash' do
   version node['elastic_opsworks']['elasticsearch']['version']
 end

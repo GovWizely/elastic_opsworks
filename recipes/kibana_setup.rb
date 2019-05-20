@@ -4,15 +4,12 @@
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
-node.default['elastic_opsworks']['elasticsearch']['plugins'] = node['elastic_opsworks']['elasticsearch']['plugins']
 include_recipe 'elastic_opsworks::elasticsearch_setup'
-include_recipe 'elastic_opsworks::logstash_setup'
 
 elastic_install 'kibana' do
   version node['elastic_opsworks']['elasticsearch']['version']
 end
 
-application_hash = search(:aws_opsworks_app, 'shortname:elasticsearch').first.to_hash
 instance = search(:aws_opsworks_instance, 'self:true').first
 
 directory '/var/run/kibana' do
