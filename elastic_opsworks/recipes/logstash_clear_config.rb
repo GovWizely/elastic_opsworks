@@ -1,0 +1,17 @@
+#
+# Cookbook:: elastic_opsworks
+# Recipe:: logstash_clear_config
+#
+# Copyright:: 2018, The Authors, All Rights Reserved.
+
+directory '/etc/logstash/conf.d/' do
+  recursive true
+  action :delete
+end
+
+directory '/etc/logstash/conf.d/' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
