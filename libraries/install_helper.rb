@@ -103,16 +103,16 @@ module ElasticOpsworks
     end
 
     def yum_repo_resource
-      yum_repository 'elastic-6.x' do
-        baseurl 'https://artifacts.elastic.co/packages/6.x/yum'
+      yum_repository 'elastic-7.x' do
+        baseurl 'https://artifacts.elastic.co/packages/7.x/yum'
         gpgkey 'https://artifacts.elastic.co/GPG-KEY-elasticsearch'
         action :nothing # :add, remove
       end
     end
 
     def apt_repo_resource
-      apt_repository 'elastic-6.x' do
-        uri 'https://artifacts.elastic.co/packages/6.x/apt'
+      apt_repository 'elastic-7.x' do
+        uri 'https://artifacts.elastic.co/packages/7.x/apt'
         key 'https://artifacts.elastic.co/GPG-KEY-elasticsearch'
         components ['main']
         distribution 'stable'

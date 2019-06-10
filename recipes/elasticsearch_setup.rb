@@ -7,17 +7,7 @@
 include_recipe 'elastic_opsworks::default'
 include_recipe 'java::default'
 
-auto_create_indices = []
 elasticsearch_plugins = node['elastic_opsworks']['elasticsearch']['plugins'].to_a
-
-if node['elastic_opsworks']['xpack']['enabled']
-  auto_create_indices += node['elastic_opsworks']['xpack']['indices']
-  auto_create_indices += node['elastic_opsworks']['kibana']['indices']
-end
-
-unless auto_create_indices.empty?
-  node.default['elastic_opsworks']['elasticsearch']['action.auto_create_index'] = auto_create_indices.join(',')
-end
 
 elasticsearch_user 'elasticsearch'
 
@@ -42,56 +32,94 @@ Chef::Log.info "roles: #{role_configuration}"
 initial_configuration = {
   'action.auto_create_index' => node['elastic_opsworks']['elasticsearch']['action.auto_create_index'],
   'bootstrap.memory_lock' => node['elastic_opsworks']['elasticsearch']['bootstrap.memory_lock'],
-  'cluster.name' => node['elastic_opsworks']['elasticsearch']['cluster.name'],
-  'cluster.routing.allocation.awareness.attributes' => 'zone',
-  'node.attr.zone' => instance['availability_zone'],
-  'discovery.zen.hosts_provider' => 'ec2',
-  'discovery.zen.minimum_master_nodes' => node['elastic_opsworks']['elasticsearch']['zen.minimum_master_nodes'],
-  'network.host' => node['elastic_opsworks']['elasticsearch']['network.host']
+  'cloud.node.auto_attributes' => true,
+  'cluster.routing.allocation.awareness.attributes' => 'aws_availability_zone',
+  'discovery.seed_providers' => 'ec2',
+  'network.host' => node['elastic_opsworks']['elasticsearch']['network.host'],
+  'xpack.monitoring.collection.enabled' => true,
+  'xpack.security.enabled' => true,
+  'xpack.security.transport.ssl.enabled' => true,
+  'xpack.security.transport.ssl.verification_mode' => 'certificate',
+  'xpack.security.transport.ssl.keystore.path' => '/etc/elasticsearch/certs/elastic-certificates.p12',
+  'xpack.security.transport.ssl.truststore.path' => '/etc/elasticsearch/certs/elastic-certificates.p12'
 }.merge role_configuration
 
 merged_configuration = initial_configuration.merge node['elastic_opsworks']['elasticsearch']['custom_configuration']
 
 elasticsearch_configure 'elasticsearch' do
+  cookbook_jvm_options 'elastic_opsworks'
+  cookbook_log4j2_properties 'elastic_opsworks'
+  jvm_options []
   allocated_memory node['elastic_opsworks']['elasticsearch']['allocated_memory']
   configuration merged_configuration
 end
 
-%w(/etc/systemd /etc/systemd/system /etc/systemd/system/elasticsearch.service.d).each do |path|
-  directory path do
-    owner 'root'
-    group 'root'
-    only_if { ::File.exist?('/usr/lib/systemd') }
-  end
-end
-
-cookbook_file '/etc/systemd/system/elasticsearch.service.d/elasticsearch.conf' do
-  source 'systemd_elasticsearch.conf'
-  owner 'root'
-  group 'root'
-  only_if { ::File.exist?('/usr/lib/systemd') }
-end
-
-bash 'set_elasticsearch_keystore_creds' do
-  aws_access_key = application_hash['environment']['aws_access_key']
-  aws_secret_key = application_hash['environment']['aws_secret_key']
-  code <<-EOF
-    echo #{aws_access_key} | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin discovery.ec2.access_key
-    echo #{aws_secret_key} | /usr/share/elasticsearch/bin/elasticsearch-keystore add discovery.ec2.secret_key
-  EOF
-  not_if 'sudo /usr/share/elasticsearch/bin/elasticsearch-keystore list | grep access_key'
-end
-
-file '/etc/elasticsearch/elasticsearch.keystore' do
-  action :touch
-  owner 'root'
+bootstrap_password = application_hash['environment']['bootstrap_password']
+execute 'elasticsearch-keystore add bootstrap.password' do
+  command "echo '#{bootstrap_password}' | bin/elasticsearch-keystore add bootstrap.password -f --stdin"
+  cwd '/usr/share/elasticsearch'
+  user 'root'
   group 'elasticsearch'
+  not_if { bootstrap_password.nil? }
+end
+
+%w(access_key secret_key).each do |key_name|
+  key_file_name = "#{Chef::Config['file_cache_path']}/#{key_name}"
+  file key_file_name do
+    content application_hash['environment']["aws_#{key_name}"]
+    sensitive true
+  end
+
+  execute "elasticsearch-keystore add discovery.ec2.#{key_name}" do
+    command "cat #{key_file_name} | bin/elasticsearch-keystore add discovery.ec2.#{key_name} -f --stdin"
+    cwd '/usr/share/elasticsearch'
+    user 'root'
+    group 'elasticsearch'
+  end
+
+  execute "rm #{key_file_name}"
 end
 
 elasticsearch_plugins.each do |plugin|
-  elasticsearch_plugin '-b ' + plugin unless File.exist?("/usr/share/elasticsearch/plugins/#{plugin}")
+  execute "bin/elasticsearch-plugin install -b #{plugin}" do
+    cwd '/usr/share/elasticsearch'
+    user 'root'
+    group 'elasticsearch'
+    not_if { ::File.exist?("/usr/share/elasticsearch/plugins/#{plugin}") }
+  end
 end
 
-elasticsearch_service 'elasticsearch' do
-  action [:configure, :enable, :start]
+directory '/etc/systemd/system/elasticsearch.service.d' do
+  owner 'root'
+  group 'root'
+  mode '0775'
+end
+
+cookbook_file '/etc/systemd/system/elasticsearch.service.d/override.conf' do
+  source 'override.conf'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create
+end
+
+directory '/etc/elasticsearch/certs' do
+  owner 'root'
+  group 'elasticsearch'
+  mode '0775'
+end
+
+cookbook_file '/etc/elasticsearch/certs/elastic-certificates.p12' do
+  source 'elastic-certificates.p12'
+  owner 'elasticsearch'
+  group 'elasticsearch'
+  mode '0660'
+end
+
+execute 'systemctl daemon-reload' do
+  environment 'PATH' => '/usr/bin:/bin'
+end
+
+service 'elasticsearch' do
+  action [:enable, :start]
 end

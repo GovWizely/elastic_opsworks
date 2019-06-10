@@ -21,7 +21,8 @@ end
 kibana_pid_file = '/var/run/kibana/kibana.pid'
 
 initial_configuration = {
-  'elasticsearch.url' => "http://#{instance['private_ip']}:9200",
+  'server.name' => Chef::Config[:node_name],
+  'elasticsearch.hosts' => ["http://#{instance['private_ip']}:9200"],
   'pid.file' => kibana_pid_file,
   'server.host' => instance['private_ip']
 }
@@ -29,24 +30,42 @@ initial_configuration = {
 merged_configuration = initial_configuration.merge node['elastic_opsworks']['kibana']['custom_configuration']
 
 template '/etc/kibana/kibana.yml' do
-  source 'kibana.yml.erb'
+  source 'yml.erb'
   variables(config: merged_configuration)
-  not_if "grep '^elasticsearch.username' /etc/kibana/kibana.yml"
+end
+
+execute 'bin/kibana-keystore create' do
+  cwd '/usr/share/kibana'
+  user 'root'
+  group 'kibana'
+  not_if { ::File.exist?('/var/lib/kibana/kibana.keystore') }
+end
+
+application_hash = search(:aws_opsworks_app, 'shortname:elasticsearch').first.to_hash
+
+kibana_credentials = {
+  'elasticsearch.username' => node['elastic_opsworks']['kibana']['elasticsearch.username'],
+  'elasticsearch.password' => application_hash['environment']['kibana_password']
+}
+
+kibana_credentials.each do |(key_name, key_value)|
+  key_file_name = "#{Chef::Config['file_cache_path']}/kibana_#{key_name}"
+  file "#{key_file_name}" do
+    content key_value
+    sensitive true
+  end
+
+  execute "kibana-keystore add #{key_name}" do
+    command "cat #{key_file_name} | bin/kibana-keystore add #{key_name} -f --stdin"
+    cwd '/usr/share/kibana'
+    user 'root'
+    group 'kibana'
+  end
+
+  execute "rm #{key_file_name}"
 end
 
 service 'kibana' do
   supports restart: true, status: true
   action [:enable, :start]
-end
-
-template '/etc/logrotate.d/kibana' do
-  source 'kibana_logrotate.erb'
-  owner 'root'
-  group 'root'
-  mode '0644'
-  variables(
-    log_path: '/var/log/kibana/kibana.stdout /var/log/kibana/kibana.stderr',
-    pid: kibana_pid_file,
-    username: 'kibana'
-  )
 end
