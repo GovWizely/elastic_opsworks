@@ -1,0 +1,30 @@
+{
+  "app_source": {
+    "password": null,
+    "revision": "master",
+    "ssh_key": null,
+    "type": "git",
+    "url": "https://github.com",
+    "user": null
+  },
+  "enable_ssl": false,
+  "environment": {
+    "aws_access_key_id": "MY_AWS_ACCESS_KEY_ID",
+    "aws_secret_access_key": "MY_AWS_SECRET_ACCESS_KEY",
+    "aws_region": "us-west-1",
+    "aws_security_groups": "es-sg",
+    "elastic_password": "foobar",
+    "kibana_username": "kibana",
+    "kibana_password": "barfoo",
+    "logstash_system_password": "newfoobar"
+  },
+  "name": "elasticsearch",
+  "shortname": "elasticsearch",
+  "ssl_configuration": {
+    "certificate": null,
+    "private_key": null,
+    "chain": null
+  },
+  "type": "other",
+  "deploy": true
+}

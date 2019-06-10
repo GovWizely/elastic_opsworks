@@ -1,0 +1,22 @@
+input {
+  s3 {
+    id => "98-placeholder-s3"
+    access_key_id => "${access_key_id}"
+    secret_access_key => "${secret_access_key}"
+    bucket => "<%= @input_bucket %>"
+    prefix => "placeholder-"
+    backup_to_bucket => "<%= @input_bucket %>"
+    backup_add_prefix => "backup-"
+    delete => true
+  }
+}
+
+output {
+  elasticsearch {
+    id => "98-placeholder-elasticsearch"
+    hosts => ["logstash1.localdomain"]
+    index => "logstash-placeholder-%{+YYYY.MM.dd}"
+    user => "logstash_internal"
+    password => "${logstash_internal.password}"
+  }
+}
