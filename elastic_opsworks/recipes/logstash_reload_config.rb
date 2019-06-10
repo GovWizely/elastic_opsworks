@@ -6,5 +6,5 @@
 #
 
 execute 'reload logstash config' do
-  command "kill -SIGHUP $(systemctl status logstash.service | grep PID | sed 's/[^0-9]*//g')"
+  command "kill -1 $(systemctl status logstash.service | grep PID | sed 's/[^0-9]*//g')"
 end
