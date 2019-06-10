@@ -7,5 +7,6 @@ long_description 'Installs/Configures elastic_opsworks'
 version '0.1.0'
 chef_version '>= 12.18.31' if respond_to?(:chef_version)
 
-depends 'elasticsearch', '> 4.0'
-depends 'java'
+depends 'elasticsearch'
+depends 'java', '= 3.2.1'
+depends 'seven_zip', '= 2.0.2'

@@ -17,9 +17,52 @@ verifier:
   name: inspec
 
 platforms:
-  - name: centos-7
+  - name: bento/amazonlinux-2
 
 suites:
+  - name: elasticsearch
+    run_list:
+      - recipe[elastic_opsworks::elasticsearch_setup]
+    data_bags_path: test/fixtures/data_bags/elasticsearch
+    verifier:
+      inspec_tests:
+        - test/integration/shared
+    attributes:
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
+          custom_configuration:
+            discovery.ec2.groups: es-sg
+
+  - name: kibana
+    run_list:
+      - recipe[elastic_opsworks::kibana_setup]
+    data_bags_path: test/fixtures/data_bags/kibana
+    verifier:
+      inspec_tests:
+        - test/integration/shared
+    attributes:
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
+          custom_configuration:
+            discovery.ec2.groups: es-sg
+
+  - name: logstash
+    run_list:
+      - recipe[elastic_opsworks::logstash_setup]
+    data_bags_path: test/fixtures/data_bags/logstash
+    verifier:
+      inspec_tests:
+    attributes:
+      elastic_opsworks:
+        elasticsearch:
+          allocated_memory: 256m
+          cluster.name: test-cluster
+          custom_configuration:
+
   - name: master
     run_list:
       - recipe[elastic_opsworks::elasticsearch_setup]
@@ -37,32 +80,6 @@ suites:
     run_list:
       - recipe[elastic_opsworks::elasticsearch_setup]
     data_bags_path: test/fixtures/data_bags/data
-    verifier:
-      inspec_tests:
-        - test/integration/shared
-    attributes:
-      elastic_opsworks:
-        elasticsearch:
-          allocated_memory: 256m
-          cluster.name: test-cluster
-
-  - name: elasticsearch
-    run_list:
-      - recipe[elastic_opsworks::elasticsearch_setup]
-    data_bags_path: test/fixtures/data_bags/elasticsearch
-    verifier:
-      inspec_tests:
-        - test/integration/shared
-    attributes:
-      elastic_opsworks:
-        elasticsearch:
-          allocated_memory: 256m
-          cluster.name: test-cluster
-
-  - name: kibana
-    run_list:
-      - recipe[elastic_opsworks::kibana_setup]
-    data_bags_path: test/fixtures/data_bags/kibana
     verifier:
       inspec_tests:
         - test/integration/shared

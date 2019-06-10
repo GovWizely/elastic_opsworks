@@ -12,54 +12,55 @@
 
 # Stack settings
 
-- Default operating system: Amazon Linux 2018.03
+- Default operating system: Amazon Linux 2
 
 # elasticsearch App
 
 ## Environment Variables
 
-- `aws_access_key_id`
+- `aws_access_key`
 
-    Configure the `cloud.aws.access_key` in `elasticsearch.yml`
+    Configure the AWS access key for the Elasticsearch `discovery-ec2` and `repository-s3` plugins
 
-- `aws_secret_access_key`
+- `aws_secret_key`
 
-    Configure the `cloud.aws.secret_key` in `elasticsearch.yml`
+    Configure the AWS secret key for the Elasticsearch `discovery-ec2` and `repository-s3` plugins
 
-- `aws_region`
-
-    Configure the `cloud.aws.region` in `elasticsearch.yml`
-
-- `aws_security_groups` 
+- `logstash_config_bucket` 
     
-    Configure the `discovery.ec2.groups` in `elasticsearch.yml`
+    Configure the logstash config S3 bucket
+
+- `bootstrap_password`
+
+    Configure the bootstrap password for `elastic` user
 
 - `elastic_password`
 
     Configure the password for `elastic` user
-    Required if `node['elastic_opsworks']['xpack']['enabled']` is `true`
-
-- `kibana_username`
-
-    Configure the `elasticsearch.username` in `kibana.yml`
-    Required if `node['elastic_opsworks']['xpack']['enabled']` is `true`
 
 - `kibana_password`
 
-    Configure the `elasticsearch.password` in `kibana.yml`
-    Required if `node['elastic_opsworks']['xpack']['enabled']` is `true`
+    Configure the password for `kibana` user
 
 - `logstash_system_password`
 
     Configure the password for `logstash_system` user
-    Required if `node['elastic_opsworks']['xpack']['enabled']` is `true`
 
-# Attributes
+- `beats_system_password`
 
-- `node['elastic_opsworks']['elasticsearch']['cluster.name']` - Configure elasticsearch cluster name (REQUIRED)
-- `node['elastic_opsworks']['elasticsearch']['allocated_memory']` - Override the default allocated memory
-- `node['elastic_opsworks']['elasticsearch']['custom_configuration']` - Add additional key value pairs configuration in `elasticsearch.yml`
-- `node['elastic_opsworks']['xpack']['enabled']` - `true` by default
+    Configure the password for `beats_system` user
+
+- `apm_system_password`
+
+    Configure the password for `apm_system` user
+
+- `remote_monitoring_user_password`
+
+    Configure the password for `remote_monitoring_user` user
+
+- `logstash_internal_password`
+
+    Configure the password for `logstash_internal` user
 
 # Usage
 
@@ -85,14 +86,10 @@
     - Set inter cluster security group
     - Setup client access security group
 
-- If you have `node['elastic_opsworks']['xpack']['enabled']` set to `true`
+- Add `kibana` layer if you want a node kibana node
 
-    - Run `elastic_opsworks::change_default_password` on a node with `data` role
+    - Add `elastic_opsworks::kibana_setup` in the `Setup` lifecycle event
 
-    - Add `kibana` layer
-    
-        - Add `elastic_opsworks::kibana_setup` in the `Setup` lifecycle event
-        - Set inter cluster security group
-        - Set ELB to kibana security group
-    
-    - Login to kibana and update the license
+- Add `logstash` layer if you want a node logstash node
+
+    - Add `elastic_opsworks::logstash_setup` and `elastic_opsworks::logstash_sync_config` in the `Setup` lifecycle event
