@@ -5,6 +5,5 @@
 # Copyright:: 2018, The Authors, All Rights Reserved.
 
 service 'logstash' do
-  provider Chef::Provider::Service::Upstart
   action [:restart]
 end

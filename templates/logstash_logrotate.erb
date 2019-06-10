@@ -1,11 +1,9 @@
 <%= @log_path %> {
     daily
-    missingok
-    rotate 14
+    rotate 7
+    copytruncate
     compress
     delaycompress
+    missingok
     notifempty
-    sharedscripts
-    endscript
-    su <%= @username %>
 }
