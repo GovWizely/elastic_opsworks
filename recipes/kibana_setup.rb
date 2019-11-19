@@ -36,7 +36,7 @@ end
 
 execute 'bin/kibana-keystore create' do
   cwd '/usr/share/kibana'
-  user 'root'
+  user 'kibana'
   group 'kibana'
   not_if { ::File.exist?('/var/lib/kibana/kibana.keystore') }
 end
@@ -58,7 +58,7 @@ kibana_credentials.each do |(key_name, key_value)|
   execute "kibana-keystore add #{key_name}" do
     command "cat #{key_file_name} | bin/kibana-keystore add #{key_name} -f --stdin"
     cwd '/usr/share/kibana'
-    user 'root'
+    user 'kibana'
     group 'kibana'
   end
 
